@@ -1,14 +1,16 @@
 {
 	"name": "nintendo-flix-backend",
-	"version": 1,
+	"version": 2,
 	"public": true,
-	"build": {
-		"src": "src/server.js",
-		"use": "@vercel/node"
-	},
+	"builds": [
+		{
+			"src": "src/server.js",
+			"use": "@vercel/node"
+		}
+	],
 	"routes": [
 		{
-			"src": "/(.*)",
+			"src": "(.*)",
 			"dest": "src/server.js"
 		}
 	]
