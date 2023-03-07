@@ -84,11 +84,11 @@ const games = [
 	},
 	{
 		id: 9,
-		name: 'Zelda',
+		name: 'Tom & Jerry',
 		console: 'Super Nintendo',
-		key: 'zelda',
-		romUrl: `game/zelda`,
-		imageUrl: 'image/sbm5',
+		key: 'tom-jerry',
+		romUrl: `game/tom-jerry`,
+		imageUrl: 'image/tom-jerry',
 		rank: 5,
 	},
 	{
@@ -179,6 +179,15 @@ const games = [
 		key: 'top-gear2',
 		romUrl: `game/top-gear2`,
 		imageUrl: 'image/top-gear2',
+		rank: 5,
+	},
+	{
+		id: 20,
+		name: 'Zelda',
+		console: 'Super Nintendo',
+		key: 'zelda',
+		romUrl: `game/zelda`,
+		imageUrl: 'image/sbm5',
 		rank: 5,
 	},
 ];
