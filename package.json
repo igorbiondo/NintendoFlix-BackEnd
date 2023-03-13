@@ -5,7 +5,8 @@
 	"main": "index.js",
 	"scripts": {
 		"watch": "nodemon src/server.js",
-		"start": "node src/server.js"
+		"start": "node src/server.js",
+		"cluster": "npx pm2 start src/server.js -i max"
 	},
 	"keywords": [],
 	"author": "",
@@ -13,6 +14,7 @@
 	"dependencies": {
 		"cors": "^2.8.5",
 		"express": "^4.18.2",
+		"pm2": "^5.2.2",
 		"react-router-dom": "^6.6.1",
 		"sass": "^1.57.1"
 	},
