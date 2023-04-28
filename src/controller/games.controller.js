@@ -1,63 +1,26 @@
-const model = require('../model/games.model');
+const db = require('../model/games.model');
 const path = require('path');
-function getGames(req, res) {
-	res.json(model);
-}
 
-function getGame(req, res) {
-	const gameId = +req.params.id;
-	const game = model[gameId];
-
-	if (game) {
-		res.json(game);
-	} else {
-		res.status(404).json({
-			error: 'Game does not exits',
-		});
+async function updateGame(req, res) {
+	const game = req.body;
+	try {
+		return res.status(200).json(await db.updateGame(game));
+	} catch (err) {
+		return res
+			.status(400)
+			.json({ erro: 'Jogo não encontrado' });
 	}
 }
-function getGameFav(req, res) {
-	const gameId = +req.params.id;
-	const favoritos = [];
-	model.map((game) => {
-		game.rank === 5 ? favoritos.push(game) : '';
-	});
-	res.json(favoritos);
-}
-function getRom(req, res) {
-	const gameId = +req.params.id;
-	const gameRom = req.params.rom;
-	const game = model[gameId];
-	console.log(req.params.rom);
 
-	if (game) {
-		res.sendFile(
-			path.resolve(
-				__dirname,
-				'..',
-				'..',
-				'data',
-				`${gameRom}.zip`
-			)
-		);
-	} else {
-		res.status(404).json({
-			error: 'Game does not exits',
-		});
+async function getAllGames(req, res) {
+	try {
+		const games = await db.getAllGames();
+		return res.status(200).json(games);
+	} catch (err) {
+		console.log(err);
 	}
 }
-function getImage(req, res) {
-	const gameId = +req.params.id;
-	const game = model[gameId];
 
-	if (game) {
-		res.json(game);
-	} else {
-		res.status(404).json({
-			error: 'Game does not exits',
-		});
-	}
-}
 function getLoader(req, res) {
 	res.sendFile(
 		path.resolve(
@@ -69,10 +32,67 @@ function getLoader(req, res) {
 	);
 }
 
+async function getGame(req, res) {
+	try {
+		return res
+			.status(200)
+			.json(await db.getGame(req.params.id));
+	} catch (error) {
+		return res.status(400).json({
+			erro: 'Jogo não encontrado',
+		});
+	}
+}
+
+async function getRom(req, res) {
+	const { id, key } = req.params;
+	const game = await db.getGame(id);
+	game.key === key
+		? res.sendFile(
+				path.resolve(
+					__dirname,
+					'..',
+					'..',
+					'data',
+					`${key}.zip`
+				)
+		  )
+		: res.status(400).json({ erro: 'Jogo não encontrado' });
+}
+
+async function getGameFav(req, res) {
+	const favGames = await db.getAllGames({
+		meta: { rank: 5 },
+	});
+	return res.status(200).json(favGames);
+}
+
+async function getImage(req, res) {
+	try {
+		const { key } = await db.getGame(req.params.id);
+		return res.sendFile(
+			path.resolve(
+				__dirname,
+				'..',
+				'..',
+				'data',
+				'images',
+				`${key}.jpg`
+			)
+		);
+	} catch (err) {
+		return res
+			.status(400)
+			.json({ erro: 'Imagem nao encontrada' });
+	}
+}
+
 module.exports = {
-	getGames,
+	getAllGames,
 	getGame,
-	getRom,
 	getLoader,
+	getRom,
+	updateGame,
 	getGameFav,
+	getImage,
 };

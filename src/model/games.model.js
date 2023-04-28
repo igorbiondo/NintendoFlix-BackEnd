@@ -1,195 +1,54 @@
-const path = require('path');
+const gamesDB = require('./games.mongo');
 
-const games = [
-	{
-		id: 0,
-		name: 'Super Mario World',
-		console: 'Super Nintendo',
-		key: 'smw',
-		romUrl: `game/smw`,
-		imageUrl: 'image/smw',
-		rank: 5,
-	},
-	{
-		id: 1,
-		name: 'Super Bomber Man',
-		console: 'Super Nintendo',
-		key: 'sbm1',
-		romUrl: `game/sbm1`,
-		imageUrl: 'image/sbm1',
-		rank: 0,
-	},
-	{
-		id: 2,
-		name: 'Super Bomber Man 2',
-		console: 'Super Nintendo',
-		key: 'sbm2',
-		romUrl: `game/sbm2`,
-		imageUrl: 'image/sbm2',
-		rank: 0,
-	},
-	{
-		id: 3,
-		name: 'Super Bomber Man 3',
-		console: 'Super Nintendo',
-		key: 'sbm3',
-		romUrl: `game/sbm3`,
-		imageUrl: 'image/sbm3',
-		rank: 0,
-	},
-	{
-		id: 4,
-		name: 'Super Bomber Man 4',
-		console: 'Super Nintendo',
-		key: 'sbm4',
-		romUrl: `game/sbm4`,
-		imageUrl: 'image/sbm4',
-		rank: 0,
-	},
-	{
-		id: 5,
-		name: 'Super Bomber Man 5',
-		console: 'Super Nintendo',
-		key: 'sbm5',
-		romUrl: `game/sbm5`,
-		imageUrl: 'image/sbm5',
-		rank: 5,
-	},
-	{
-		id: 6,
-		name: 'Donkey Kong',
-		console: 'Super Nintendo',
-		key: 'dkg',
-		romUrl: `game/dkg`,
-		imageUrl: 'image/sbm5',
-		rank: 5,
-	},
-	{
-		id: 7,
-		name: 'Donkey Kong 2',
-		console: 'Super Nintendo',
-		key: 'dkg2',
-		romUrl: `game/dkg2`,
-		imageUrl: 'image/sbm5',
-		rank: 0,
-	},
-	{
-		id: 8,
-		name: 'Donkey Kong 3',
-		console: 'Super Nintendo',
-		key: 'dkg3',
-		romUrl: `game/dkg3`,
-		imageUrl: 'image/sbm5',
-		rank: 0,
-	},
-	{
-		id: 9,
-		name: 'Tom & Jerry',
-		console: 'Super Nintendo',
-		key: 'tom-jerry',
-		romUrl: `game/tom-jerry`,
-		imageUrl: 'image/tom-jerry',
-		rank: 5,
-	},
-	{
-		id: 10,
-		name: 'Super Mario Kart',
-		console: 'Super Nintendo',
-		key: 'smk',
-		romUrl: `game/smk`,
-		imageUrl: 'image/smk',
-		rank: 5,
-	},
-	{
-		id: 11,
-		name: 'Dragon Ball Z',
-		console: 'Super Nintendo',
-		key: 'dbz',
-		romUrl: `game/dbz`,
-		imageUrl: 'image/dbz',
-		rank: 5,
-	},
-	{
-		id: 12,
-		name: 'Aventuras de Batman & Robin',
-		console: 'Super Nintendo',
-		key: 'bat-rob',
-		romUrl: `game/bat-rob`,
-		imageUrl: 'image/bat-rob',
-		rank: 1,
-	},
-	{
-		id: 13,
-		name: 'Contra III',
-		console: 'Super Nintendo',
-		key: 'contra3',
-		romUrl: `game/contra3`,
-		imageUrl: 'image/contra3',
-		rank: 1,
-	},
-	{
-		id: 14,
-		name: 'Doom',
-		console: 'Super Nintendo',
-		key: 'doom',
-		romUrl: `game/doom`,
-		imageUrl: 'image/doom',
-		rank: 1,
-	},
-	{
-		id: 15,
-		name: 'Mortal Kombat',
-		console: 'Super Nintendo',
-		key: 'mtl-kbt',
-		romUrl: `game/mtl-kbt`,
-		imageUrl: 'image/mtl-kbt',
-		rank: 5,
-	},
-	{
-		id: 16,
-		name: 'Mortal Kombat II',
-		console: 'Super Nintendo',
-		key: 'mtl-kbt2',
-		romUrl: `game/mtl-kbt2`,
-		imageUrl: 'image/mtl-kbt2',
-		rank: 1,
-	},
-	{
-		id: 17,
-		name: 'Street Fighter II',
-		console: 'Super Nintendo',
-		key: 'street-fght2',
-		romUrl: `game/street-fght2`,
-		imageUrl: 'image/street-fght2',
-		rank: 5,
-	},
-	{
-		id: 18,
-		name: 'Top Gear',
-		console: 'Super Nintendo',
-		key: 'top-gear',
-		romUrl: `game/top-gear`,
-		imageUrl: 'image/top-gear',
-		rank: 5,
-	},
-	{
-		id: 19,
-		name: 'Top Gear II',
-		console: 'Super Nintendo',
-		key: 'top-gear2',
-		romUrl: `game/top-gear2`,
-		imageUrl: 'image/top-gear2',
-		rank: 5,
-	},
-	{
-		id: 20,
-		name: 'Zelda',
-		console: 'Super Nintendo',
-		key: 'zelda',
-		romUrl: `game/zelda`,
-		imageUrl: 'image/sbm5',
-		rank: 5,
-	},
-];
+async function updateGame(game) {
+	try {
+		return await gamesDB.findOneAndUpdate(
+			{
+				id: game.id,
+			},
+			{
+				id: game.id,
+				name: game.name,
+				imageUrl: game.imageUrl,
+				gender: game.gender,
+				gamePath: game.gamePath,
+				synopsis: game.synopsis,
+				meta: game.meta,
+				key: game.key,
+			},
+			{
+				returnDocument: 'after',
+				upsert: true,
+				projection: {
+					_id: 0,
+					__v: 0,
+				},
+			}
+		);
+	} catch (err) {
+		console.error(`Não pode salvar ${err}`);
+	}
+}
 
-module.exports = games;
+async function getAllGames(filter = {}) {
+	return await gamesDB.find(filter, {
+		_id: 0,
+		__v: 0,
+	});
+}
+async function getGame(id) {
+	return await gamesDB.findOne(
+		{ id: id },
+		{},
+		{
+			_id: 0,
+			__v: 0,
+		}
+	);
+}
+
+module.exports = {
+	getAllGames,
+	getGame,
+	updateGame,
+};

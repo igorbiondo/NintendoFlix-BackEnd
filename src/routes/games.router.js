@@ -1,17 +1,17 @@
 const express = require('express');
 const gamesController = require('../controller/games.controller');
-const imageController = require('../controller/image.controller');
 
 const gamesRouter = express.Router();
 
-gamesRouter.get('/', gamesController.getGames);
+gamesRouter.get('/', gamesController.getAllGames);
+gamesRouter.post('/', gamesController.updateGame);
 gamesRouter.get('/game/:id', gamesController.getGame);
 gamesRouter.get('/loader', gamesController.getLoader);
-gamesRouter.get('/rom/:id/:rom', gamesController.getRom);
+gamesRouter.get('/rom/:id/:key', gamesController.getRom);
 gamesRouter.get(
-	'/games/mais-jogados',
+	'/mais-jogados',
 	gamesController.getGameFav
 );
-gamesRouter.get('/image/:id', imageController.getImage);
+gamesRouter.get('/image/:id', gamesController.getImage);
 
 module.exports = gamesRouter;
