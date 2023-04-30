@@ -2,22 +2,44 @@ const model = require('../model/games.model');
 const path = require('path');
 
 function getImage(req, res) {
-	const imageId = req.params.id;
-	const game = model[imageId];
-	console.log(imageId);
-
-	if (game) {
-		res.sendFile(
-			path.resolve(
-				__dirname,
-				'..',
-				'..',
-				'data',
-				'images',
-				`${game.key}.jpg`
-			)
-		);
-	}
+	const imageId = req.params.imageId;
+	res.sendFile(
+		path.resolve(
+			__dirname,
+			'..',
+			'..',
+			'data',
+			'images',
+			`${imageId}.jpg`
+		)
+	);
 }
-
-module.exports = { getImage };
+function getBanner(req, res) {
+	const imageId = req.params.imageId;
+	res.sendFile(
+		path.resolve(
+			__dirname,
+			'..',
+			'..',
+			'data',
+			'images',
+			'billboard',
+			`${imageId}.jpg`
+		)
+	);
+}
+function getLogo(req, res) {
+	const imageId = req.params.imageId;
+	res.sendFile(
+		path.resolve(
+			__dirname,
+			'..',
+			'..',
+			'data',
+			'images',
+			'billboard',
+			`${imageId}.png`
+		)
+	);
+}
+module.exports = { getImage, getBanner, getLogo };
