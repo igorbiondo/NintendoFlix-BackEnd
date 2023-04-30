@@ -1,4 +1,5 @@
 const db = require('../model/games.model');
+const dbBillboard = require('../model/billboard.model');
 const path = require('path');
 
 async function updateGame(req, res) {
@@ -11,10 +12,32 @@ async function updateGame(req, res) {
 			.json({ erro: 'Jogo não encontrado' });
 	}
 }
+async function getInitial(req, res) {
+	const r = Math.round(Math.random() * (4 - 1) + 1);
+	const gamesDb = await db.getAllGames();
+	const [billboardDB] = await dbBillboard.finBillboard({
+		bId: r,
+	});
+	const mostPlayed = await getGameFav();
+
+	// console.log(gamesDb[billboardDB.gameId]);
+	// console.log(billboardDB.gameId);
+	const resposta = {
+		billboard: {
+			...billboardDB._doc,
+			key: gamesDb[billboardDB.gameId].key,
+		},
+		games: gamesDb,
+		mostPlayed: mostPlayed,
+	};
+	console.log(r);
+	res.status(200).json(resposta);
+}
 
 async function getAllGames(req, res) {
 	try {
 		const games = await db.getAllGames();
+
 		return res.status(200).json(games);
 	} catch (err) {
 		console.log(err);
@@ -60,11 +83,11 @@ async function getRom(req, res) {
 		: res.status(400).json({ erro: 'Jogo não encontrado' });
 }
 
-async function getGameFav(req, res) {
+async function getGameFav() {
 	const favGames = await db.getAllGames({
 		meta: { rank: 5 },
 	});
-	return res.status(200).json(favGames);
+	return favGames;
 }
 
 async function getImage(req, res) {
@@ -95,4 +118,5 @@ module.exports = {
 	updateGame,
 	getGameFav,
 	getImage,
+	getInitial,
 };
